@@ -32,6 +32,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         collectionView.dataSource = self
         
         setFlowLayoutParameters()
+        print("Flicks length: \(flicks.count)")
         
         do {
             try fetchedResultsController.performFetch()
@@ -39,6 +40,16 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         
         fetchedResultsController.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
+        flicks = fetchedResultsController.fetchedObjects as! [Flick]
+        print("first flick: \(flicks[0].photoPath)")
+        
+        FlickrClient.sharedInstance().downloadFlickrImages(flicks) { (success) in
+            if success {
+                let alert = UIAlertController(title: nil, message: "Image download complete", preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+        }
     }
     
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
@@ -52,7 +63,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     lazy var fetchedResultsController : NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Flick")
         
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "photoPath", ascending: true)]
+        fetchRequest.sortDescriptors = []
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedResultsController
     }()
@@ -77,6 +88,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
+        print("Number of cells: \(sectionInfo.numberOfObjects)")
         return sectionInfo.numberOfObjects
     }
     
@@ -150,6 +162,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
                                     atIndexPath indexPath: NSIndexPath?,
                                                 forChangeType type: NSFetchedResultsChangeType,
                                                               newIndexPath: NSIndexPath?) {
+        print("update initiated")
         
         switch type {
         case .Insert:
@@ -159,9 +172,12 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
             collectionView.deleteItemsAtIndexPaths([indexPath!])
             
         case .Update:
-            let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! FlickCollectionViewCell
-            let flick = controller.objectAtIndexPath(indexPath!) as! Flick
-            self.configureCell(cell, flick: flick)
+            if let cell = collectionView.cellForItemAtIndexPath(indexPath!) as? FlickCollectionViewCell {
+                let flick = controller.objectAtIndexPath(indexPath!) as! Flick
+                self.configureCell(cell, flick: flick)
+            }
+            
+            
             
         case .Move:
             collectionView.deleteItemsAtIndexPaths([indexPath!])
@@ -188,18 +204,18 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
             //print("downloading image")
             cell.flickImage?.image = posterImage
             
-            let task = FlickrClient.sharedInstance().taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
-                if let data = imageData {
-                    let image = UIImage(data: data)
-                    flick.image = image
-                    
-                    dispatch_async(dispatch_get_main_queue(), {
-                        cell.flickImage.image = image
-                    })
-                }
-            })
+//            let task = FlickrClient.sharedInstance().taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
+//                if let data = imageData {
+//                    let image = UIImage(data: data)
+//                    flick.image = image
+//                    
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        cell.flickImage.image = image
+//                    })
+//                }
+//            })
             
-            cell.taskToCancelifCellIsReused = task
+//            cell.taskToCancelifCellIsReused = task
         }
         
     }

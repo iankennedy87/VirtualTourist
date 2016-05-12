@@ -87,13 +87,14 @@ class MapViewController: UIViewController {
                     let imageUrl = photo[FlickrClient.Constants.FlickrResponseKeys.MediumURL] as! String
                     //self.imageUrls.append(imageUrl)
                     let newFlick = Flick(url: imageUrl, context: self.sharedContext)
-                    //self.flicks.append(newFlick)
+                    self.flicks.append(newFlick)
                 }
                 
                 //print(self.imageUrls)
+                CoreDataStackManager.sharedInstance().saveContext()
                 
                 dispatch_async(dispatch_get_main_queue(), {
-                    CoreDataStackManager.sharedInstance().saveContext()
+                    
                     self.button.enabled = true
                     let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
                     collectionView.numberOfCells = self.numCells

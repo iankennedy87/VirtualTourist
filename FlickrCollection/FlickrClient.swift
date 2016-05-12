@@ -135,19 +135,22 @@ class FlickrClient: NSObject {
     
     func downloadFlickrImages(flicks: [Flick], downloadCompletionHandler: (success: Bool) -> Void) -> Void {
         
-        let flick = flicks[0]
-        
         for flick in flicks {
             let task = taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
                 if let data = imageData {
-                    dispatch_async(dispatch_get_main_queue(), { 
-                        let image = UIImage(data: data)
-                        flick.image = image
-                        CoreDataStackManager.sharedInstance().saveContext()
-                    })
+                    let image = UIImage(data: data)
+                    flick.image = image
+                    flick.imageDownloaded = true
+                    print("Downloaded image \(flick.photoPath)")
+                    CoreDataStackManager.sharedInstance().saveContext()
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        
+//                    })
                 }
             })
         }
+        
+        downloadCompletionHandler(success: true)
 
     }
     

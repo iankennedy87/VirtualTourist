@@ -14,6 +14,7 @@ class Flick: NSManagedObject {
     
     @NSManaged var imageUrl: String
     @NSManaged var photoPath: String
+    @NSManaged var imageDownloaded: Bool
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
@@ -26,6 +27,7 @@ class Flick: NSManagedObject {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         
         imageUrl = url
+        imageDownloaded = false
         let url = NSURL(fileURLWithPath: url)
         let lastComponent = url.lastPathComponent!
         photoPath = lastComponent
