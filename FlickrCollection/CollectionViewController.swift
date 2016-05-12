@@ -12,7 +12,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -33,9 +33,11 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         
         setFlowLayoutParameters()
         
-//        do {
-//            try fetchedResultsController.performFetch()
-//        } catch {}
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {}
+        
+        fetchedResultsController.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -50,6 +52,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     lazy var fetchedResultsController : NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Flick")
         
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "photoPath", ascending: true)]
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedResultsController
     }()
@@ -73,28 +76,124 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     }
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return numberOfCells!
+        let sectionInfo = self.fetchedResultsController.sections![section]
+        return sectionInfo.numberOfObjects
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        let flick = flicks[indexPath.row]
+        let cellIdentifier = "FlickCell"
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("FlickCell", forIndexPath: indexPath) as! FlickCollectionViewCell
+        let flick = fetchedResultsController.objectAtIndexPath(indexPath) as! Flick
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! FlickCollectionViewCell
+        
+        configureCell(cell, flick: flick)
+        
+        return cell
         
         // Set the image
+//        if let localImage = flick.image {
+//            //print("used local image")
+//            cell.flickImage.image = localImage
+//        } else {
+//            //print("downloading image")
+//            cell.flickImage?.image = UIImage(named: "Placeholder")
+//            
+//            let task = FlickrClient.sharedInstance().taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
+//                if let data = imageData {
+//                    dispatch_async(dispatch_get_main_queue(), { 
+//                        let image = UIImage(data: data)
+//                        flick.image = image
+//                        cell.flickImage.image = image
+//                    })
+//                }
+//            })
+//            
+//            cell.taskToCancelifCellIsReused = task
+//        }
+//        
+//        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath)
+    {
+        
+    }
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        
+    }
+    
+    func controller(controller: NSFetchedResultsController,
+                    didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
+                                     atIndex sectionIndex: Int,
+                                             forChangeType type: NSFetchedResultsChangeType) {
+        
+        switch type {
+        case .Insert:
+            collectionView.insertSections(NSIndexSet(index: sectionIndex))
+            
+        case .Delete:
+            collectionView.deleteSections(NSIndexSet(index: sectionIndex))
+            
+        default:
+            return
+        }
+    }
+    //
+    // This is the most interesting method. Take particular note of way the that newIndexPath
+    // parameter gets unwrapped and put into an array literal: [newIndexPath!]
+    //
+    func controller(controller: NSFetchedResultsController,
+                    didChangeObject anObject: AnyObject,
+                                    atIndexPath indexPath: NSIndexPath?,
+                                                forChangeType type: NSFetchedResultsChangeType,
+                                                              newIndexPath: NSIndexPath?) {
+        
+        switch type {
+        case .Insert:
+            collectionView.insertItemsAtIndexPaths([newIndexPath!])
+            
+        case .Delete:
+            collectionView.deleteItemsAtIndexPaths([indexPath!])
+            
+        case .Update:
+            let cell = collectionView.cellForItemAtIndexPath(indexPath!) as! FlickCollectionViewCell
+            let flick = controller.objectAtIndexPath(indexPath!) as! Flick
+            self.configureCell(cell, flick: flick)
+            
+        case .Move:
+            collectionView.deleteItemsAtIndexPaths([indexPath!])
+            collectionView.insertItemsAtIndexPaths([newIndexPath!])
+            
+        default:
+            return
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+
+    }
+    
+    func configureCell(cell: FlickCollectionViewCell, flick: Flick) {
+        var posterImage = UIImage(named: "Placeholder")
+        
+        cell.flickImage!.image = nil
+        
         if let localImage = flick.image {
             //print("used local image")
             cell.flickImage.image = localImage
         } else {
             //print("downloading image")
-            cell.flickImage?.image = UIImage(named: "Placeholder")
+            cell.flickImage?.image = posterImage
             
             let task = FlickrClient.sharedInstance().taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
                 if let data = imageData {
-                    dispatch_async(dispatch_get_main_queue(), { 
-                        let image = UIImage(data: data)
-                        flick.image = image
+                    let image = UIImage(data: data)
+                    flick.image = image
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
                         cell.flickImage.image = image
                     })
                 }
@@ -102,12 +201,6 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
             
             cell.taskToCancelifCellIsReused = task
         }
-        
-        return cell
-    }
-    
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath)
-    {
         
     }
 }

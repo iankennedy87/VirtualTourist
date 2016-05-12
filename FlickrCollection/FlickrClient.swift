@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class FlickrClient: NSObject {
     
@@ -16,6 +17,9 @@ class FlickrClient: NSObject {
     
     var session = NSURLSession.sharedSession()
     
+    lazy var sharedContext: NSManagedObjectContext = {
+        return CoreDataStackManager.sharedInstance().managedObjectContext
+    }()
     
     private func bboxString() -> String {
         // ensure bbox is bounded by minimum and maximums
@@ -139,18 +143,12 @@ class FlickrClient: NSObject {
                     dispatch_async(dispatch_get_main_queue(), { 
                         let image = UIImage(data: data)
                         flick.image = image
+                        CoreDataStackManager.sharedInstance().saveContext()
                     })
                 }
             })
         }
-        let task = FlickrClient.sharedInstance().taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
-            if let data = imageData {
-                dispatch_async(dispatch_get_main_queue(), {
-                    let image = UIImage(data: data)
-                    flick.image = image
-                })
-            }
-        })
+
     }
     
     private func flickrURLFromParameters(parameters: [String:AnyObject]) -> NSURL {

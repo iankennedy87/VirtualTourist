@@ -87,7 +87,7 @@ class MapViewController: UIViewController {
                     let imageUrl = photo[FlickrClient.Constants.FlickrResponseKeys.MediumURL] as! String
                     //self.imageUrls.append(imageUrl)
                     let newFlick = Flick(url: imageUrl, context: self.sharedContext)
-                    self.flicks.append(newFlick)
+                    //self.flicks.append(newFlick)
                 }
                 
                 //print(self.imageUrls)
