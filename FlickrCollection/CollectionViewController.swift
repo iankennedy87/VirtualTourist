@@ -32,7 +32,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         collectionView.dataSource = self
         
         setFlowLayoutParameters()
-        print("Flicks length: \(flicks.count)")
+        //print("Flicks length: \(flicks.count)")
         
         do {
             try fetchedResultsController.performFetch()
@@ -41,7 +41,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         fetchedResultsController.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
         flicks = fetchedResultsController.fetchedObjects as! [Flick]
-        print("first flick: \(flicks[0].photoPath)")
+        //print("first flick: \(flicks[0].photoPath)")
         
         FlickrClient.sharedInstance().downloadFlickrImages(flicks) { (success) in
             if success {
@@ -88,7 +88,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
-        print("Number of cells: \(sectionInfo.numberOfObjects)")
+        //print("Number of cells: \(sectionInfo.numberOfObjects)")
         return sectionInfo.numberOfObjects
     }
     
@@ -162,7 +162,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
                                     atIndexPath indexPath: NSIndexPath?,
                                                 forChangeType type: NSFetchedResultsChangeType,
                                                               newIndexPath: NSIndexPath?) {
-        print("update initiated")
+
         
         switch type {
         case .Insert:
