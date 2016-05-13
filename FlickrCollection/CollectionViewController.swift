@@ -20,19 +20,23 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var numberOfCells: Int?
+    @IBOutlet weak var newCollection: UIBarButtonItem!
+    
+    //var numberOfCells: Int?
     
     var flicks: [Flick]!
     
     var imageUrls: [String]!
+    
+    var imagesDownloaded: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
+        newCollection.enabled = false
         
         setFlowLayoutParameters()
-        //print("Flicks length: \(flicks.count)")
         
         do {
             try fetchedResultsController.performFetch()
@@ -43,12 +47,20 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         flicks = fetchedResultsController.fetchedObjects as! [Flick]
         //print("first flick: \(flicks[0].photoPath)")
         
-        FlickrClient.sharedInstance().downloadFlickrImages(flicks) { (success) in
-            if success {
-                let alert = UIAlertController(title: nil, message: "Image download complete", preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
+        //If images haven't been downloaded, download them here
+        if !imagesDownloaded {
+            //Disable new collection button
+            FlickrClient.sharedInstance().downloadFlickrImages(flicks) { (success) in
+                if success {
+                    self.imagesDownloaded = true
+                    self.newCollection.enabled = true
+                    let alert = UIAlertController(title: nil, message: "Image download complete", preferredStyle: .Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }
             }
+        } else {
+            newCollection.enabled = true
         }
     }
     
@@ -104,33 +116,16 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         
         return cell
         
-        // Set the image
-//        if let localImage = flick.image {
-//            //print("used local image")
-//            cell.flickImage.image = localImage
-//        } else {
-//            //print("downloading image")
-//            cell.flickImage?.image = UIImage(named: "Placeholder")
-//            
-//            let task = FlickrClient.sharedInstance().taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
-//                if let data = imageData {
-//                    dispatch_async(dispatch_get_main_queue(), { 
-//                        let image = UIImage(data: data)
-//                        flick.image = image
-//                        cell.flickImage.image = image
-//                    })
-//                }
-//            })
-//            
-//            cell.taskToCancelifCellIsReused = task
-//        }
-//        
-//        return cell
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath)
     {
+        let flick = fetchedResultsController.objectAtIndexPath(indexPath) as! Flick
         
+        //Set image to nil to delete image from cache and hard drive using storeImage function in ImageCache
+        flick.image = nil
+        sharedContext.deleteObject(flick)
+        CoreDataStackManager.sharedInstance().saveContext()
     }
     
     func controllerWillChangeContent(controller: NSFetchedResultsController) {

@@ -87,19 +87,20 @@ class MapViewController: UIViewController {
                     let imageUrl = photo[FlickrClient.Constants.FlickrResponseKeys.MediumURL] as! String
                     //self.imageUrls.append(imageUrl)
                     let newFlick = Flick(url: imageUrl, context: self.sharedContext)
-                    self.flicks.append(newFlick)
+                    CoreDataStackManager.sharedInstance().saveContext()
+                    //self.flicks.append(newFlick)
                 }
                 
                 //print(self.imageUrls)
-                CoreDataStackManager.sharedInstance().saveContext()
+                //CoreDataStackManager.sharedInstance().saveContext()
                 
                 dispatch_async(dispatch_get_main_queue(), {
                     
                     self.button.enabled = true
                     let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-                    collectionView.numberOfCells = self.numCells
+                    //collectionView.numberOfCells = self.numCells
                     //collectionView.imageUrls = self.imageUrls
-                    collectionView.flicks = self.flicks
+                    //collectionView.flicks = self.flicks
                     self.navigationController?.pushViewController(collectionView, animated: true)
 
                 })
@@ -107,8 +108,8 @@ class MapViewController: UIViewController {
         } else {
             //print("Getting flicks from memory")
             let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-            collectionView.numberOfCells = flicks.count
-            collectionView.flicks = self.flicks
+            //collectionView.numberOfCells = flicks.count
+            //collectionView.flicks = self.flicks
             navigationController?.pushViewController(collectionView, animated: true)
         }
         

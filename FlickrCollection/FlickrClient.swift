@@ -138,19 +138,21 @@ class FlickrClient: NSObject {
         let group = dispatch_group_create()
         
         for flick in flicks {
-            dispatch_group_enter(group)
-            let task = taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
-                if let data = imageData {
-                    let image = UIImage(data: data)
-                    flick.image = image
-                    flick.imageDownloaded = true
-                    //print("Downloaded image \(flick.photoPath)")
-                    dispatch_async(dispatch_get_main_queue(), {
-                        CoreDataStackManager.sharedInstance().saveContext()
-                    })
-                    dispatch_group_leave(group)
-                }
-            })
+            if flick.image == nil {
+                dispatch_group_enter(group)
+                let task = taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
+                    if let data = imageData {
+                        let image = UIImage(data: data)
+                        flick.image = image
+                        flick.imageDownloaded = true
+                        //print("Downloaded image \(flick.photoPath)")
+                        dispatch_async(dispatch_get_main_queue(), {
+                            CoreDataStackManager.sharedInstance().saveContext()
+                        })
+                        dispatch_group_leave(group)
+                    }
+                })
+            }
         }
         
         dispatch_group_notify(group, dispatch_get_main_queue()) { 
