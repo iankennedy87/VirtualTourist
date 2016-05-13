@@ -22,11 +22,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     
     @IBOutlet weak var newCollection: UIBarButtonItem!
     
-    //var numberOfCells: Int?
-    
     var flicks: [Flick]!
-    
-    var imageUrls: [String]!
     
     var imagesDownloaded: Bool = false
 
@@ -43,17 +39,16 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         } catch {}
         
         fetchedResultsController.delegate = self
-        // Do any additional setup after loading the view, typically from a nib.
+
         flicks = fetchedResultsController.fetchedObjects as! [Flick]
-        //print("first flick: \(flicks[0].photoPath)")
         
-        //If images haven't been downloaded, download them here
+        //If images haven't been downloaded, download them and leave new collection button disabled
         if !imagesDownloaded {
-            //Disable new collection button
             FlickrClient.sharedInstance().downloadFlickrImages(flicks) { (success) in
                 if success {
                     self.imagesDownloaded = true
                     self.newCollection.enabled = true
+                    
                     let alert = UIAlertController(title: nil, message: "Image download complete", preferredStyle: .Alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
                     self.presentViewController(alert, animated: true, completion: nil)
@@ -64,6 +59,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         }
     }
     
+    //Reset flow layout if phone is rotated
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
         setFlowLayoutParameters()
     }
@@ -74,7 +70,6 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     
     lazy var fetchedResultsController : NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Flick")
-        
         fetchRequest.sortDescriptors = []
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedResultsController
@@ -85,7 +80,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         let space: CGFloat = 3.0
         flowLayout.minimumLineSpacing = space
         flowLayout.minimumInteritemSpacing = space
-//        dimension = (view.frame.size.width - (2 * space)) / 3.0
+
         switch UIDevice.currentDevice().orientation {
         case .Portrait, .PortraitUpsideDown:
             
@@ -100,7 +95,6 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
-        //print("Number of cells: \(sectionInfo.numberOfObjects)")
         return sectionInfo.numberOfObjects
     }
     
@@ -124,13 +118,12 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         
         //Set image to nil to delete image from cache and hard drive using storeImage function in ImageCache
         flick.image = nil
+        
+        //Delete flick from context and save context to update collection view
         sharedContext.deleteObject(flick)
         CoreDataStackManager.sharedInstance().saveContext()
     }
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        
-    }
     
     func controller(controller: NSFetchedResultsController,
                     didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
@@ -172,14 +165,10 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
                 self.configureCell(cell, flick: flick)
             }
             
-            
-            
         case .Move:
             collectionView.deleteItemsAtIndexPaths([indexPath!])
             collectionView.insertItemsAtIndexPaths([newIndexPath!])
             
-        default:
-            return
         }
     }
     
@@ -188,29 +177,17 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func configureCell(cell: FlickCollectionViewCell, flick: Flick) {
-        var posterImage = UIImage(named: "Placeholder")
+        let placeholderImage = UIImage(named: "Placeholder")
         
         cell.flickImage!.image = nil
         
+        //If flick already has an image assigned, make it the cell image
         if let localImage = flick.image {
-            //print("used local image")
             cell.flickImage.image = localImage
         } else {
-            //print("downloading image")
-            cell.flickImage?.image = posterImage
+            //if not, set the cell image to the placeholder while the image downloads
+            cell.flickImage?.image = placeholderImage
             
-//            let task = FlickrClient.sharedInstance().taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
-//                if let data = imageData {
-//                    let image = UIImage(data: data)
-//                    flick.image = image
-//                    
-//                    dispatch_async(dispatch_get_main_queue(), {
-//                        cell.flickImage.image = image
-//                    })
-//                }
-//            })
-            
-//            cell.taskToCancelifCellIsReused = task
         }
         
     }

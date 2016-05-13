@@ -26,7 +26,6 @@ class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        flicks = fetchAllFlicks()
 
         let coordinate = CLLocationCoordinate2DMake(FlickrClient.Constants.Flickr.DefaultSearchLatitude, FlickrClient.Constants.Flickr.DefaultSearchLongitude)
         self.mapView.centerCoordinate = coordinate
@@ -53,6 +52,7 @@ class MapViewController: UIViewController {
     
     @IBAction func push(sender: AnyObject) {
         
+        flicks = fetchAllFlicks()
         
         if flicks.isEmpty {
             print("No flicks")
@@ -67,15 +67,13 @@ class MapViewController: UIViewController {
                     print("Result is not a dictionary")
                     return
                 }
-                
-                //print(photosDictionary)
+
                 
                 guard let numberOfPhotos = photosDictionary[FlickrClient.Constants.FlickrResponseKeys.Total] as? String else {
                     print("Didn't find total in photos dictionary")
                     return
                 }
                 
-                //print("Number of photos: \(numberOfPhotos)")
                 self.numCells = Int(numberOfPhotos)
                 
                 guard let photosArray = photosDictionary[FlickrClient.Constants.FlickrResponseKeys.Photo] as? [[String: AnyObject]] else {
@@ -85,31 +83,20 @@ class MapViewController: UIViewController {
                 
                 for photo in photosArray {
                     let imageUrl = photo[FlickrClient.Constants.FlickrResponseKeys.MediumURL] as! String
-                    //self.imageUrls.append(imageUrl)
                     let newFlick = Flick(url: imageUrl, context: self.sharedContext)
                     CoreDataStackManager.sharedInstance().saveContext()
-                    //self.flicks.append(newFlick)
                 }
-                
-                //print(self.imageUrls)
-                //CoreDataStackManager.sharedInstance().saveContext()
                 
                 dispatch_async(dispatch_get_main_queue(), {
                     
                     self.button.enabled = true
                     let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-                    //collectionView.numberOfCells = self.numCells
-                    //collectionView.imageUrls = self.imageUrls
-                    //collectionView.flicks = self.flicks
                     self.navigationController?.pushViewController(collectionView, animated: true)
 
                 })
             }
         } else {
-            //print("Getting flicks from memory")
             let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-            //collectionView.numberOfCells = flicks.count
-            //collectionView.flicks = self.flicks
             navigationController?.pushViewController(collectionView, animated: true)
         }
         
