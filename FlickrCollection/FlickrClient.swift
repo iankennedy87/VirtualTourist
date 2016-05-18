@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 import CoreData
+import MapKit
+import CoreLocation
 
 class FlickrClient: NSObject {
     
@@ -21,10 +23,13 @@ class FlickrClient: NSObject {
         return CoreDataStackManager.sharedInstance().managedObjectContext
     }()
     
-    private func bboxString() -> String {
+    private func bboxString(coordinate: CLLocationCoordinate2D) -> String {
         // ensure bbox is bounded by minimum and maximums
-        let latitude = Constants.Flickr.DefaultSearchLatitude
-        let longitude = Constants.Flickr.DefaultSearchLongitude
+//        let latitude = Constants.Flickr.DefaultSearchLatitude
+//        let longitude = Constants.Flickr.DefaultSearchLongitude
+        
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         let minimumLon = max(longitude - Constants.Flickr.SearchBBoxHalfWidth, Constants.Flickr.SearchLonRange.0)
         let minimumLat = max(latitude - Constants.Flickr.SearchBBoxHalfHeight, Constants.Flickr.SearchLatRange.0)
@@ -34,11 +39,11 @@ class FlickrClient: NSObject {
     }
     
     
-    func searchByLatLon(latitude: Double, longitude: Double, searchCompletionHandler: CompletionHandler) -> Void {
+    func searchByLatLon(coordinate coordinate: CLLocationCoordinate2D, searchCompletionHandler: CompletionHandler) -> Void {
         let methodParameters = [
             Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.SearchMethod,
             Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
-            Constants.FlickrParameterKeys.BoundingBox: bboxString(),
+            Constants.FlickrParameterKeys.BoundingBox: bboxString(coordinate),
             Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
             Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
             Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
@@ -140,7 +145,7 @@ class FlickrClient: NSObject {
         for flick in flicks {
             if flick.image == nil {
                 dispatch_group_enter(group)
-                let task = taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
+                _ = taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
                     if let data = imageData {
                         dispatch_async(dispatch_get_main_queue(), {
                             let image = UIImage(data: data)
