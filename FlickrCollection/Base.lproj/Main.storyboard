@@ -34,13 +34,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rua-HA-QyP">
-                                <rect key="frame" x="277" y="638" width="46" height="30"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="push:" destination="WWW-fr-P8W" eventType="touchUpInside" id="E1p-OQ-Rpo"/>
-                                </connections>
-                            </button>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="aLT-Ja-sgF">
                                 <rect key="frame" x="180" y="174" width="240" height="311"/>
                             </mapView>
@@ -57,13 +50,12 @@
                         <barButtonItem key="backBarButtonItem" title="OK" id="n89-Tn-Db7"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="button" destination="Rua-HA-QyP" id="HyS-op-hWG"/>
                         <outlet property="mapView" destination="aLT-Ja-sgF" id="jAD-lr-CEf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0xB-NG-JJi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-142" y="-98"/>
+            <point key="canvasLocation" x="-249" y="-65"/>
         </scene>
         <!--Collection View Controller-->
         <scene sceneID="41d-WN-AIL">
@@ -87,7 +79,11 @@
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Eqd-1v-fVW"/>
-                                    <barButtonItem title="New Collection" id="wPx-1i-dSA"/>
+                                    <barButtonItem title="New Collection" id="wPx-1i-dSA">
+                                        <connections>
+                                            <action selector="newCollection:" destination="UlP-7r-dqf" id="s6n-7N-CWs"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Ujv-ig-456"/>
                                 </items>
                             </toolbar>

@@ -24,10 +24,14 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     
     var flicks: [Flick]!
     
+    var pin: Pin!
+    
     var imagesDownloaded: Bool = false
 
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         collectionView.delegate = self
         collectionView.dataSource = self
         newCollection.enabled = false
@@ -40,13 +44,30 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         
         fetchedResultsController.delegate = self
 
-        flicks = fetchedResultsController.fetchedObjects as! [Flick]
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        
+        mapView.centerCoordinate = pin.coordinate
+        mapView.addAnnotation(PinAnnotation(pin: pin))
+        
+        let mapWidth = mapView.frame.width
+        let mapHeight = mapView.frame.height
+        let ratio = Double(mapWidth/mapHeight)
+        
+        let span = MKCoordinateSpanMake(0.1,0.1 * ratio)
+        let region = MKCoordinateRegionMake(pin.coordinate, span)
+        self.mapView.region = region
+        
+        flicks = pin.photos
         
         //If images haven't been downloaded, download them and leave new collection button disabled
-        if !imagesDownloaded {
+        if !pin.photosDownloaded {
             FlickrClient.sharedInstance().downloadFlickrImages(flicks) { (success) in
                 if success {
-                    self.imagesDownloaded = true
+                    self.pin.photosDownloaded  = true
+                    CoreDataStackManager.sharedInstance().saveContext()
                     self.newCollection.enabled = true
                     
                     let alert = UIAlertController(title: nil, message: "Image download complete", preferredStyle: .Alert)
@@ -57,6 +78,43 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         } else {
             newCollection.enabled = true
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
+    }
+    
+    
+    @IBAction func newCollection(sender: AnyObject) {
+        let flicks = fetchedResultsController.fetchedObjects as! [Flick]
+        
+        for flick in flicks {
+            flick.image = nil
+            flick.pin = nil
+            sharedContext.deleteObject(flick)
+            CoreDataStackManager.sharedInstance().saveContext()
+        }
+        
+        pin.photosDownloaded = false
+        newCollection.enabled = false
+        
+        FlickrClient.sharedInstance().downloadUrlsForPin(pin) {
+            dispatch_async(dispatch_get_main_queue(), { 
+                FlickrClient.sharedInstance().downloadFlickrImages(self.pin.photos) { (success) in
+                    if success {
+                        self.pin.photosDownloaded  = true
+                        CoreDataStackManager.sharedInstance().saveContext()
+                        self.newCollection.enabled = true
+                        
+                        let alert = UIAlertController(title: nil, message: "Image download complete", preferredStyle: .Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                        self.presentViewController(alert, animated: true, completion: nil)
+                    }
+                }
+
+            })
+        }
+
     }
     
     //Reset flow layout if phone is rotated
@@ -71,6 +129,8 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     lazy var fetchedResultsController : NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Flick")
         fetchRequest.sortDescriptors = []
+        fetchRequest.predicate = NSPredicate(format: "pin == %@", self.pin)
+        
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedResultsController
     }()
@@ -114,14 +174,19 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath)
     {
-        let flick = fetchedResultsController.objectAtIndexPath(indexPath) as! Flick
-        
-        //Set image to nil to delete image from cache and hard drive using storeImage function in ImageCache
-        flick.image = nil
-        
-        //Delete flick from context and save context to update collection view
-        sharedContext.deleteObject(flick)
-        CoreDataStackManager.sharedInstance().saveContext()
+        if pin.photosDownloaded {
+            let flick = fetchedResultsController.objectAtIndexPath(indexPath) as! Flick
+            
+            //Set image to nil to delete image from cache and hard drive using storeImage function in ImageCache
+            flick.image = nil
+            
+            flick.pin = nil
+            
+            //Delete flick from context and save context to update collection view
+            sharedContext.deleteObject(flick)
+            CoreDataStackManager.sharedInstance().saveContext()
+        }
+
     }
     
     
@@ -183,7 +248,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         
         //If flick already has an image assigned, make it the cell image
         if let localImage = flick.image {
-            cell.flickImage.image = localImage
+            cell.flickImage.image = UIImage(data: localImage)
         } else {
             //if not, set the cell image to the placeholder while the image downloads
             cell.flickImage?.image = placeholderImage

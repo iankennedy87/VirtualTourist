@@ -117,6 +117,42 @@ class FlickrClient: NSObject {
         task.resume()
     }
     
+    func downloadUrlsForPin(pin: Pin, completionHandler: () -> Void) {
+        let coordinate = pin.coordinate
+        FlickrClient.sharedInstance().searchByLatLon(coordinate: coordinate) { (result, error) in
+            guard (error == nil) else {
+                print("Encountered error pushing to collection view")
+                return
+            }
+            
+            guard let photosDictionary = result as? [String: AnyObject] else {
+                print("Result is not a dictionary")
+                return
+            }
+            
+            guard let _ = photosDictionary[FlickrClient.Constants.FlickrResponseKeys.Total] as? String else {
+                print("Didn't find total in photos dictionary")
+                return
+            }
+            
+            guard let photosArray = photosDictionary[FlickrClient.Constants.FlickrResponseKeys.Photo] as? [[String: AnyObject]] else {
+                return
+            }
+            
+            if photosArray.count > 0 {
+                for index in 0...min(20, photosArray.count-1) {
+                    let photo = photosArray[index]
+                    let imageUrl = photo[FlickrClient.Constants.FlickrResponseKeys.MediumURL] as! String
+                    let newFlick = Flick(url: imageUrl, context: self.sharedContext)
+                    newFlick.pin = pin
+                    CoreDataStackManager.sharedInstance().saveContext()
+                }
+            }
+            
+            completionHandler()
+        }
+    }
+
     func taskForDownloadImage(url: String, completionHandler: (imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
         
         let imageUrl = NSURL(string: url)
@@ -148,8 +184,8 @@ class FlickrClient: NSObject {
                 _ = taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
                     if let data = imageData {
                         dispatch_async(dispatch_get_main_queue(), {
-                            let image = UIImage(data: data)
-                            flick.image = image
+                            //let image = UIImage(data: data)
+                            flick.image = data
                             flick.imageDownloaded = true
                             CoreDataStackManager.sharedInstance().saveContext()
                         })

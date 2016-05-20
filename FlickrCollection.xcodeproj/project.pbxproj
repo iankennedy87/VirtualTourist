@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0017102A1CDFC85200224292 /* FlickCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001710291CDFC85200224292 /* FlickCollectionViewCell.swift */; };
 		007EAFAD1CED243D00E5ED20 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007EAFAC1CED243D00E5ED20 /* Pin.swift */; };
+		007EAFAF1CED4D4100E5ED20 /* PinAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007EAFAE1CED4D4100E5ED20 /* PinAnnotation.swift */; };
 		00A2C64D1CDFC1A00002BE3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A2C64C1CDFC1A00002BE3C /* AppDelegate.swift */; };
 		00A2C64F1CDFC1A00002BE3C /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A2C64E1CDFC1A00002BE3C /* CollectionViewController.swift */; };
 		00A2C6521CDFC1A00002BE3C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00A2C6501CDFC1A00002BE3C /* Main.storyboard */; };
@@ -46,6 +47,7 @@
 /* Begin PBXFileReference section */
 		001710291CDFC85200224292 /* FlickCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickCollectionViewCell.swift; sourceTree = "<group>"; };
 		007EAFAC1CED243D00E5ED20 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		007EAFAE1CED4D4100E5ED20 /* PinAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinAnnotation.swift; sourceTree = "<group>"; };
 		00A2C6491CDFC1A00002BE3C /* FlickrCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlickrCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00A2C64C1CDFC1A00002BE3C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		00A2C64E1CDFC1A00002BE3C /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				00A2C64E1CDFC1A00002BE3C /* CollectionViewController.swift */,
 				00C539071CE02F36009343E7 /* TaskCancelingTableViewCell.swift */,
 				001710291CDFC85200224292 /* FlickCollectionViewCell.swift */,
+				007EAFAE1CED4D4100E5ED20 /* PinAnnotation.swift */,
 				00C539041CE0267F009343E7 /* Flickr */,
 				00A2C6561CDFC1A00002BE3C /* Assets.xcassets */,
 				00A2C64C1CDFC1A00002BE3C /* AppDelegate.swift */,
@@ -299,6 +302,7 @@
 				00C5390D1CE15D9A009343E7 /* CoreDataStackManager.swift in Sources */,
 				007EAFAD1CED243D00E5ED20 /* Pin.swift in Sources */,
 				00C539061CE026A9009343E7 /* ImageCache.swift in Sources */,
+				007EAFAF1CED4D4100E5ED20 /* PinAnnotation.swift in Sources */,
 				00C539081CE02F36009343E7 /* TaskCancelingTableViewCell.swift in Sources */,
 				00A2C64F1CDFC1A00002BE3C /* CollectionViewController.swift in Sources */,
 				00C538FE1CDFF7BB009343E7 /* Flick.swift in Sources */,

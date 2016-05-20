@@ -15,6 +15,8 @@ class Flick: NSManagedObject {
     @NSManaged var imageUrl: String
     @NSManaged var photoPath: String
     @NSManaged var imageDownloaded: Bool
+    @NSManaged var pin: Pin?
+    @NSManaged var image: NSData?
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
@@ -33,16 +35,16 @@ class Flick: NSManagedObject {
         photoPath = lastComponent
     }
     
-    var image: UIImage? {
-        
-        get {
-            return FlickrClient.Caches.imageCache.imageWithIdentifier(photoPath)
-        }
-        
-        set {
-            FlickrClient.Caches.imageCache.storeImage(newValue, withIdentifier: photoPath)
-        }
-    }
+//    var image: UIImage? {
+//        
+//        get {
+//            return FlickrClient.Caches.imageCache.imageWithIdentifier(photoPath)
+//        }
+//        
+//        set {
+//            FlickrClient.Caches.imageCache.storeImage(newValue, withIdentifier: photoPath)
+//        }
+//    }
     
     
     func pathForIdentifier(identifier: String) -> String {
