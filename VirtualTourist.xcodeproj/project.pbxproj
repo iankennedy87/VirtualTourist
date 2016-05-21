@@ -10,6 +10,7 @@
 		0017102A1CDFC85200224292 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001710291CDFC85200224292 /* PhotoCollectionViewCell.swift */; };
 		007EAFAD1CED243D00E5ED20 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007EAFAC1CED243D00E5ED20 /* Pin.swift */; };
 		007EAFAF1CED4D4100E5ED20 /* PinAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007EAFAE1CED4D4100E5ED20 /* PinAnnotation.swift */; };
+		007EAFB11CEFFB1800E5ED20 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 007EAFB01CEFFB1800E5ED20 /* Info.plist */; };
 		00A2C64D1CDFC1A00002BE3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A2C64C1CDFC1A00002BE3C /* AppDelegate.swift */; };
 		00A2C64F1CDFC1A00002BE3C /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A2C64E1CDFC1A00002BE3C /* PhotoAlbumViewController.swift */; };
 		00A2C6521CDFC1A00002BE3C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00A2C6501CDFC1A00002BE3C /* Main.storyboard */; };
@@ -46,13 +47,13 @@
 		001710291CDFC85200224292 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		007EAFAC1CED243D00E5ED20 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		007EAFAE1CED4D4100E5ED20 /* PinAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinAnnotation.swift; sourceTree = "<group>"; };
+		007EAFB01CEFFB1800E5ED20 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00A2C6491CDFC1A00002BE3C /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00A2C64C1CDFC1A00002BE3C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		00A2C64E1CDFC1A00002BE3C /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		00A2C6511CDFC1A00002BE3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		00A2C6561CDFC1A00002BE3C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00A2C6591CDFC1A00002BE3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		00A2C65B1CDFC1A00002BE3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00A2C6601CDFC1A00002BE3C /* VirtualTourist.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VirtualTourist.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00A2C6641CDFC1A00002BE3C /* FlickrCollectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrCollectionTests.swift; sourceTree = "<group>"; };
 		00A2C6661CDFC1A00002BE3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -126,10 +127,9 @@
 				00A2C6581CDFC1A00002BE3C /* LaunchScreen.storyboard */,
 				00C539091CE15D2B009343E7 /* Model.xcdatamodeld */,
 				00C5390C1CE15D9A009343E7 /* CoreDataStackManager.swift */,
-				00A2C65B1CDFC1A00002BE3C /* Info.plist */,
+				007EAFB01CEFFB1800E5ED20 /* Info.plist */,
 			);
-			name = VirtualTourist;
-			path = FlickrCollection;
+			path = VirtualTourist;
 			sourceTree = "<group>";
 		};
 		00A2C6631CDFC1A00002BE3C /* VirtualTouristTests */ = {
@@ -138,8 +138,7 @@
 				00A2C6641CDFC1A00002BE3C /* FlickrCollectionTests.swift */,
 				00A2C6661CDFC1A00002BE3C /* Info.plist */,
 			);
-			name = VirtualTouristTests;
-			path = FlickrCollectionTests;
+			path = VirtualTouristTests;
 			sourceTree = "<group>";
 		};
 		00A2C66E1CDFC1A00002BE3C /* VirtualTouristUITests */ = {
@@ -148,8 +147,7 @@
 				00A2C66F1CDFC1A00002BE3C /* FlickrCollectionUITests.swift */,
 				00A2C6711CDFC1A00002BE3C /* Info.plist */,
 			);
-			name = VirtualTouristUITests;
-			path = FlickrCollectionUITests;
+			path = VirtualTouristUITests;
 			sourceTree = "<group>";
 		};
 		00C539041CE0267F009343E7 /* Flickr */ = {
@@ -267,6 +265,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				007EAFB11CEFFB1800E5ED20 /* Info.plist in Resources */,
 				00A2C65A1CDFC1A00002BE3C /* LaunchScreen.storyboard in Resources */,
 				00A2C6571CDFC1A00002BE3C /* Assets.xcassets in Resources */,
 				00A2C6521CDFC1A00002BE3C /* Main.storyboard in Resources */,
@@ -446,7 +445,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = FlickrCollection/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/VirtualTourist/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.udacity.VirtualTourist;
 				PRODUCT_NAME = VirtualTourist;
@@ -457,7 +456,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = FlickrCollection/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/VirtualTourist/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.udacity.VirtualTourist;
 				PRODUCT_NAME = VirtualTourist;
