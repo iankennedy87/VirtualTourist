@@ -22,11 +22,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         super.viewDidLoad()
         mapView.delegate = self
 
-        let coordinate = CLLocationCoordinate2DMake(FlickrClient.Constants.Flickr.DefaultSearchLatitude, FlickrClient.Constants.Flickr.DefaultSearchLongitude)
-        self.mapView.centerCoordinate = coordinate
-        let span = MKCoordinateSpanMake(0.1,0.1)
-        let region = MKCoordinateRegionMake(coordinate, span)
-        self.mapView.region = region
         //Add long press recognizer to map
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(MapViewController.addAnnotation(gestureRecognizer:)))
         longPressRecognizer.minimumPressDuration = 1.0
