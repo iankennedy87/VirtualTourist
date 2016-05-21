@@ -15,7 +15,6 @@ import CoreLocation
 class FlickrClient: NSObject {
     
     typealias CompletionHandler = (result: AnyObject!, error: NSError?) -> Void
-    // MARK: Search Actions
     
     var session = NSURLSession.sharedSession()
     
@@ -25,8 +24,6 @@ class FlickrClient: NSObject {
     
     private func bboxString(coordinate: CLLocationCoordinate2D) -> String {
         // ensure bbox is bounded by minimum and maximums
-//        let latitude = Constants.Flickr.DefaultSearchLatitude
-//        let longitude = Constants.Flickr.DefaultSearchLongitude
         
         let latitude = coordinate.latitude
         let longitude = coordinate.longitude
@@ -52,7 +49,6 @@ class FlickrClient: NSObject {
         
         flickrPhotoSearch(methodParameters, completionHandler: searchCompletionHandler)
     }
-    // MARK: Flickr API
     
     private func flickrPhotoSearch(methodParameters: [String:AnyObject], completionHandler: CompletionHandler) {
         
@@ -117,6 +113,7 @@ class FlickrClient: NSObject {
         task.resume()
     }
     
+    //take a pin and download urls
     func downloadUrlsForPin(pin: Pin, completionHandler: () -> Void) {
         let coordinate = pin.coordinate
         FlickrClient.sharedInstance().searchByLatLon(coordinate: coordinate) { (result, error) in
@@ -146,7 +143,7 @@ class FlickrClient: NSObject {
                     dispatch_group_enter(group)
                     let photo = photosArray[index]
                     let imageUrl = photo[FlickrClient.Constants.FlickrResponseKeys.MediumURL] as! String
-                    let newFlick = Flick(url: imageUrl, context: self.sharedContext)
+                    let newFlick = Photo(url: imageUrl, context: self.sharedContext)
                     newFlick.pin = pin
                     CoreDataStackManager.sharedInstance().saveContext()
                     dispatch_group_leave(group)
@@ -180,19 +177,19 @@ class FlickrClient: NSObject {
         return task
     }
     
-    func downloadFlickrImages(flicks: [Flick], downloadCompletionHandler: (success: Bool) -> Void) -> Void {
+    func downloadFlickrImages(photos: [Photo], downloadCompletionHandler: (success: Bool) -> Void) -> Void {
         
         let group = dispatch_group_create()
         
-        for flick in flicks {
-            if flick.image == nil {
+        for photo in photos {
+            if photo.image == nil {
                 dispatch_group_enter(group)
-                _ = taskForDownloadImage(flick.imageUrl, completionHandler: { (imageData, error) in
+                _ = taskForDownloadImage(photo.imageUrl, completionHandler: { (imageData, error) in
                     if let data = imageData {
                         dispatch_async(dispatch_get_main_queue(), {
                             //let image = UIImage(data: data)
-                            flick.image = data
-                            flick.imageDownloaded = true
+                            photo.image = data
+                            photo.imageDownloaded = true
                             CoreDataStackManager.sharedInstance().saveContext()
                         })
                         dispatch_group_leave(group)
@@ -229,8 +226,5 @@ class FlickrClient: NSObject {
         }
         return Singleton.sharedInstance
     }
-    
-    struct Caches {
-        static let imageCache = ImageCache()
-    }
+
 }

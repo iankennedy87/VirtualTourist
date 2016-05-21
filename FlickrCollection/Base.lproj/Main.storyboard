@@ -57,10 +57,10 @@
             </objects>
             <point key="canvasLocation" x="-249" y="-65"/>
         </scene>
-        <!--Collection View Controller-->
+        <!--Photo Album View Controller-->
         <scene sceneID="41d-WN-AIL">
             <objects>
-                <viewController storyboardIdentifier="CollectionViewController" id="UlP-7r-dqf" customClass="CollectionViewController" customModule="FlickrCollection" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PhotoAlbumViewController" id="UlP-7r-dqf" customClass="PhotoAlbumViewController" customModule="VirtualTourist" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="M3Y-kR-8uo"/>
                         <viewControllerLayoutGuide type="bottom" id="Sbg-sm-pD4"/>
@@ -97,14 +97,14 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FlickCell" id="eYB-3O-Oeb" customClass="FlickCollectionViewCell" customModule="FlickrCollection">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="eYB-3O-Oeb" customClass="PhotoCollectionViewCell" customModule="VirtualTourist">
                                         <rect key="frame" x="0.0" y="0.0" width="194" height="155"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="194" height="155"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="mPV-XU-yl2">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="mPV-XU-yl2" userLabel="Photo Image">
                                                     <rect key="frame" x="8" y="8" width="186" height="147"/>
                                                 </imageView>
                                             </subviews>
@@ -120,7 +120,7 @@
                                         </constraints>
                                         <size key="customSize" width="194" height="155"/>
                                         <connections>
-                                            <outlet property="flickImage" destination="mPV-XU-yl2" id="VAR-8S-enG"/>
+                                            <outlet property="photoImage" destination="mPV-XU-yl2" id="p1K-T8-sNn"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

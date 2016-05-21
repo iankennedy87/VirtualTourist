@@ -12,7 +12,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
+class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -23,7 +23,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     
     @IBOutlet weak var newCollection: UIBarButtonItem!
     
-    var flicks: [Flick]!
+    var photos: [Photo]!
     
     var pin: Pin!
     
@@ -76,12 +76,14 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     
     
     @IBAction func newCollection(sender: AnyObject) {
-        let flicks = fetchedResultsController.fetchedObjects as! [Flick]
+        //retrieve all photos assigned to pin
+        let photos = fetchedResultsController.fetchedObjects as! [Photo]
         
-        for flick in flicks {
-            flick.image = nil
-            flick.pin = nil
-            sharedContext.deleteObject(flick)
+        //remove image to delete from storage and delete from context
+        for photo in photos {
+            photo.image = nil
+            photo.pin = nil
+            sharedContext.deleteObject(photo)
             CoreDataStackManager.sharedInstance().saveContext()
         }
         
@@ -126,7 +128,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     }()
     
     lazy var fetchedResultsController : NSFetchedResultsController = {
-        let fetchRequest = NSFetchRequest(entityName: "Flick")
+        let fetchRequest = NSFetchRequest(entityName: "Photo")
         fetchRequest.sortDescriptors = []
         fetchRequest.predicate = NSPredicate(format: "pin == %@", self.pin)
         
@@ -159,13 +161,13 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        let cellIdentifier = "FlickCell"
+        let cellIdentifier = "PhotoCell"
         
-        let flick = fetchedResultsController.objectAtIndexPath(indexPath) as! Flick
+        let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! FlickCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! PhotoCollectionViewCell
         
-        configureCell(cell, flick: flick)
+        configureCell(cell, photo: photo)
         
         return cell
         
@@ -174,15 +176,15 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath:NSIndexPath)
     {
         if pin.photosDownloaded {
-            let flick = fetchedResultsController.objectAtIndexPath(indexPath) as! Flick
+            let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
             
             //Set image to nil to delete image from cache and hard drive using storeImage function in ImageCache
-            flick.image = nil
+            photo.image = nil
             
-            flick.pin = nil
+            photo.pin = nil
             
-            //Delete flick from context and save context to update collection view
-            sharedContext.deleteObject(flick)
+            //Delete photo from context and save context to update collection view
+            sharedContext.deleteObject(photo)
             CoreDataStackManager.sharedInstance().saveContext()
         }
 
@@ -205,10 +207,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
             return
         }
     }
-    //
-    // This is the most interesting method. Take particular note of way the that newIndexPath
-    // parameter gets unwrapped and put into an array literal: [newIndexPath!]
-    //
+    
     func controller(controller: NSFetchedResultsController,
                     didChangeObject anObject: AnyObject,
                                     atIndexPath indexPath: NSIndexPath?,
@@ -224,9 +223,9 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
             collectionView.deleteItemsAtIndexPaths([indexPath!])
             
         case .Update:
-            if let cell = collectionView.cellForItemAtIndexPath(indexPath!) as? FlickCollectionViewCell {
-                let flick = controller.objectAtIndexPath(indexPath!) as! Flick
-                self.configureCell(cell, flick: flick)
+            if let cell = collectionView.cellForItemAtIndexPath(indexPath!) as? PhotoCollectionViewCell {
+                let photo = controller.objectAtIndexPath(indexPath!) as! Photo
+                self.configureCell(cell, photo: photo)
             }
             
         case .Move:
@@ -240,17 +239,17 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
 
     }
     
-    func configureCell(cell: FlickCollectionViewCell, flick: Flick) {
+    func configureCell(cell: PhotoCollectionViewCell, photo: Photo) {
         let placeholderImage = UIImage(named: "Placeholder")
         
-        cell.flickImage!.image = nil
+        cell.photoImage!.image = nil
         
-        //If flick already has an image assigned, make it the cell image
-        if let localImage = flick.image {
-            cell.flickImage.image = UIImage(data: localImage)
+        //If photo already has an image assigned, make it the cell image
+        if let localImage = photo.image {
+            cell.photoImage.image = UIImage(data: localImage)
         } else {
             //if not, set the cell image to the placeholder while the image downloads
-            cell.flickImage?.image = placeholderImage
+            cell.photoImage?.image = placeholderImage
             
         }
         

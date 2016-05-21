@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CoreData
 
-class Flick: NSManagedObject {
+class Photo: NSManagedObject {
     
     @NSManaged var imageUrl: String
     @NSManaged var photoPath: String
@@ -24,7 +24,7 @@ class Flick: NSManagedObject {
     
     init(url: String, context: NSManagedObjectContext) {
         
-        let entity = NSEntityDescription.entityForName("Flick", inManagedObjectContext: context)!
+        let entity = NSEntityDescription.entityForName("Photo", inManagedObjectContext: context)!
         
         super.init(entity: entity, insertIntoManagedObjectContext: context)
         

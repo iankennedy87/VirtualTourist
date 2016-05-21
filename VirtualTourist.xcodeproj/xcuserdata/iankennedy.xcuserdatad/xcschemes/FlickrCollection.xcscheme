@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00A2C6481CDFC1A00002BE3C"
-               BuildableName = "FlickrCollection.app"
-               BlueprintName = "FlickrCollection"
-               ReferencedContainer = "container:FlickrCollection.xcodeproj">
+               BuildableName = "VirtualTourist.app"
+               BlueprintName = "VirtualTourist"
+               ReferencedContainer = "container:VirtualTourist.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00A2C65F1CDFC1A00002BE3C"
-               BuildableName = "FlickrCollectionTests.xctest"
-               BlueprintName = "FlickrCollectionTests"
-               ReferencedContainer = "container:FlickrCollection.xcodeproj">
+               BuildableName = "VirtualTourist.xctest"
+               BlueprintName = "VirtualTouristTests"
+               ReferencedContainer = "container:VirtualTourist.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00A2C66A1CDFC1A00002BE3C"
-               BuildableName = "FlickrCollectionUITests.xctest"
-               BlueprintName = "FlickrCollectionUITests"
-               ReferencedContainer = "container:FlickrCollection.xcodeproj">
+               BuildableName = "VirtualTourist.xctest"
+               BlueprintName = "VirtualTouristUITests"
+               ReferencedContainer = "container:VirtualTourist.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -53,9 +53,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "00A2C6481CDFC1A00002BE3C"
-            BuildableName = "FlickrCollection.app"
-            BlueprintName = "FlickrCollection"
-            ReferencedContainer = "container:FlickrCollection.xcodeproj">
+            BuildableName = "VirtualTourist.app"
+            BlueprintName = "VirtualTourist"
+            ReferencedContainer = "container:VirtualTourist.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "00A2C6481CDFC1A00002BE3C"
-            BuildableName = "FlickrCollection.app"
-            BlueprintName = "FlickrCollection"
-            ReferencedContainer = "container:FlickrCollection.xcodeproj">
+            BuildableName = "VirtualTourist.app"
+            BlueprintName = "VirtualTourist"
+            ReferencedContainer = "container:VirtualTourist.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -95,9 +95,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "00A2C6481CDFC1A00002BE3C"
-            BuildableName = "FlickrCollection.app"
-            BlueprintName = "FlickrCollection"
-            ReferencedContainer = "container:FlickrCollection.xcodeproj">
+            BuildableName = "VirtualTourist.app"
+            BlueprintName = "VirtualTourist"
+            ReferencedContainer = "container:VirtualTourist.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

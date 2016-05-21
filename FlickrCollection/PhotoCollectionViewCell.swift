@@ -9,9 +9,8 @@
 import Foundation
 import UIKit
 
-class FlickCollectionViewCell: TaskCancelingTableViewCell {
+class PhotoCollectionViewCell: UICollectionViewCell {
     
-    
-    @IBOutlet weak var flickImage: UIImageView!
+    @IBOutlet weak var photoImage: UIImageView!
     
 }

@@ -76,16 +76,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    func fetchAllFlicks() -> [Flick] {
-        let fetchRequest = NSFetchRequest(entityName: "Flick")
-        
-        do {
-            return try sharedContext.executeFetchRequest(fetchRequest) as! [Flick]
-        } catch {
-            print("Error in fetchAllFlicks: \(error)")
-            return [Flick]()
-        }
-    }
     
     func addPins(pins: [Pin]) -> Void {
         for pin in pins {
@@ -98,32 +88,15 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         
+        //retrieve pin from annotation view and deselect pin
         let annotation = view.annotation! as! PinAnnotation
         let pin = annotation.pin!
         mapView.deselectAnnotation(annotation, animated: true)
         
-        let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
+        
+        let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("PhotoAlbumViewController")  as! PhotoAlbumViewController
         collectionView.pin = pin
         self.navigationController!.pushViewController(collectionView, animated: true)
-//        if pin.photos.isEmpty {
-//        
-//            FlickrClient.sharedInstance().downloadUrlsForPin(pin, completionHandler: {
-//                let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-//                collectionView.pin = pin
-//                self.navigationController!.pushViewController(collectionView, animated: true)
-////                dispatch_async(dispatch_get_main_queue(), {
-////
-////                    let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-////                    collectionView.pin = pin
-////                    self.navigationController!.pushViewController(collectionView, animated: true)
-////                })
-//            })
-//        } else {
-//            let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-//            collectionView.pin = pin
-//            self.navigationController!.pushViewController(collectionView, animated: true)
-//        }
-
 
     }
 }
