@@ -102,20 +102,27 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let pin = annotation.pin!
         mapView.deselectAnnotation(annotation, animated: true)
         
-        if pin.photos.isEmpty {
-            FlickrClient.sharedInstance().downloadUrlsForPin(pin, completionHandler: { 
-                dispatch_async(dispatch_get_main_queue(), {
-
-                    let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-                    collectionView.pin = pin
-                    self.navigationController!.pushViewController(collectionView, animated: true)
-                })
-            })
-        } else {
-            let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
-            collectionView.pin = pin
-            self.navigationController!.pushViewController(collectionView, animated: true)
-        }
+        let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
+        collectionView.pin = pin
+        self.navigationController!.pushViewController(collectionView, animated: true)
+//        if pin.photos.isEmpty {
+//        
+//            FlickrClient.sharedInstance().downloadUrlsForPin(pin, completionHandler: {
+//                let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
+//                collectionView.pin = pin
+//                self.navigationController!.pushViewController(collectionView, animated: true)
+////                dispatch_async(dispatch_get_main_queue(), {
+////
+////                    let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
+////                    collectionView.pin = pin
+////                    self.navigationController!.pushViewController(collectionView, animated: true)
+////                })
+//            })
+//        } else {
+//            let collectionView = self.storyboard!.instantiateViewControllerWithIdentifier("CollectionViewController") as! CollectionViewController
+//            collectionView.pin = pin
+//            self.navigationController!.pushViewController(collectionView, animated: true)
+//        }
 
 
     }

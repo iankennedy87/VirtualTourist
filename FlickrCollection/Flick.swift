@@ -34,24 +34,5 @@ class Flick: NSManagedObject {
         let lastComponent = url.lastPathComponent!
         photoPath = lastComponent
     }
-    
-//    var image: UIImage? {
-//        
-//        get {
-//            return FlickrClient.Caches.imageCache.imageWithIdentifier(photoPath)
-//        }
-//        
-//        set {
-//            FlickrClient.Caches.imageCache.storeImage(newValue, withIdentifier: photoPath)
-//        }
-//    }
-    
-    
-    func pathForIdentifier(identifier: String) -> String {
-        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-        let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(identifier)
-        
-        return fullURL.path!
-    }
 
 }

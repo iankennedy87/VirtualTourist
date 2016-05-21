@@ -139,17 +139,23 @@ class FlickrClient: NSObject {
                 return
             }
             
+            let group = dispatch_group_create()
+            
             if photosArray.count > 0 {
                 for index in 0...min(20, photosArray.count-1) {
+                    dispatch_group_enter(group)
                     let photo = photosArray[index]
                     let imageUrl = photo[FlickrClient.Constants.FlickrResponseKeys.MediumURL] as! String
                     let newFlick = Flick(url: imageUrl, context: self.sharedContext)
                     newFlick.pin = pin
                     CoreDataStackManager.sharedInstance().saveContext()
+                    dispatch_group_leave(group)
                 }
             }
             
-            completionHandler()
+            dispatch_group_notify(group, dispatch_get_main_queue(), { 
+                completionHandler()
+            })
         }
     }
 

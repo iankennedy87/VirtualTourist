@@ -16,6 +16,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     
     @IBOutlet weak var mapView: MKMapView!
     
+    
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -60,23 +61,12 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         let region = MKCoordinateRegionMake(pin.coordinate, span)
         self.mapView.region = region
         
-        flicks = pin.photos
-        
-        //If images haven't been downloaded, download them and leave new collection button disabled
-        if !pin.photosDownloaded {
-            FlickrClient.sharedInstance().downloadFlickrImages(flicks) { (success) in
-                if success {
-                    self.pin.photosDownloaded  = true
-                    CoreDataStackManager.sharedInstance().saveContext()
-                    self.newCollection.enabled = true
-                    
-                    let alert = UIAlertController(title: nil, message: "Image download complete", preferredStyle: .Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
-                }
-            }
-        } else {
+        if pin.photosDownloaded {
             newCollection.enabled = true
+        }
+        
+        if pin.photos.isEmpty {
+            downloadPhotos()
         }
     }
     
@@ -97,24 +87,33 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         
         pin.photosDownloaded = false
         newCollection.enabled = false
-        
-        FlickrClient.sharedInstance().downloadUrlsForPin(pin) {
-            dispatch_async(dispatch_get_main_queue(), { 
+        downloadPhotos()
+
+    }
+    
+    func downloadPhotos() {
+        FlickrClient.sharedInstance().downloadUrlsForPin(pin, completionHandler: {
+            if !self.pin.photosDownloaded {
+                
                 FlickrClient.sharedInstance().downloadFlickrImages(self.pin.photos) { (success) in
                     if success {
                         self.pin.photosDownloaded  = true
                         CoreDataStackManager.sharedInstance().saveContext()
                         self.newCollection.enabled = true
                         
-                        let alert = UIAlertController(title: nil, message: "Image download complete", preferredStyle: .Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                        self.presentViewController(alert, animated: true, completion: nil)
+                        dispatch_async(dispatch_get_main_queue(), {
+                            if (self.isViewLoaded() && (self.view.window != nil)) {
+                                let alert = UIAlertController(title: nil, message: "Image download complete", preferredStyle: .Alert)
+                                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                                self.presentViewController(alert, animated: true, completion: nil)
+                            }
+                        })
                     }
                 }
-
-            })
-        }
-
+            } else {
+                self.newCollection.enabled = true
+            }
+        })
     }
     
     //Reset flow layout if phone is rotated
